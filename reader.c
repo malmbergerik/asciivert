@@ -22,11 +22,11 @@ int main(void) {
     Image image;
     
     int width,height, channels;
-    unsigned char *img =  stbi_load("images/flowertest.jpg", &width,&height,&channels,3);
+    unsigned char *img =  stbi_load("images/mario.png", &width,&height,&channels,3);
 
     float aspec =(float) height / width;
     float charAspect = 0.4;
-    int target_w = 160;
+    int target_w = 100;
     int target_h = (int)(target_w * aspec * charAspect);    
     if(img==NULL){
         printf("Error when parsing the image");
