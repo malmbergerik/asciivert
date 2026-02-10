@@ -20,30 +20,52 @@ int main(void) {
 
 
     Image image;
-
+    
     int width,height, channels;
-    unsigned char *img =  stbi_load("images/flower.jpg", &width,&height,&channels,3);
+    unsigned char *img =  stbi_load("images/flowertest.jpg", &width,&height,&channels,3);
 
+    float aspec =(float) height / width;
+    float charAspect = 0.4;
+    int target_w = 160;
+    int target_h = (int)(target_w * aspec * charAspect);    
     if(img==NULL){
         printf("Error when parsing the image");
         exit(1);
     }
     
     image.bytePerPixel= 3;
-    char *rowbuffer = malloc(width +1);
+    char *rowbuffer = malloc(target_w +1);
 
-    for(int i = 0; i<height; i++){
-        for(int j=0; j<width; j++){
-            unsigned char *pixel = img + (j + width * i) * image.bytePerPixel;
-            image.r = pixel[0];
-            image.g = pixel[1];
-            image.b =pixel[2];
+    for(int i = 0; i<target_h; i++){
+        for(int j=0; j<target_w; j++){
+
+            unsigned int startx =(int)(j*(float)width/target_w);
+            unsigned int starty =(int)(i*(float)height/target_h);
+            unsigned int endx =(int)((j+1)*(float)width/target_w);;
+            unsigned int endy =(int)((i+1)*(float)height/target_h);
+            
+            int sum_r =0, sum_g=0,sum_b=0;
+            int count=0;
+            for(int k=starty; k<endy; k++){
+                for(int l=startx; l <endx; l++){
+                    unsigned char *pixel = img + (k * width + l) * image.bytePerPixel;
+                    sum_r += pixel[0];
+                    sum_g += pixel[1];
+                    sum_b += pixel[2];
+                    count++;
+                }
+            }
+            if(count>0){
+                image.r = (uint8_t)(sum_r/count);
+                image.g = (uint8_t)(sum_g/count);
+                image.b = (uint8_t)(sum_b/count);
+            }
             
             image.level = 1.0f - rgbToBWLevel(image.r,image.g,image.b);
             rowbuffer[j] = getAsciiFromLevel(image.level, ascii, 70);           
         }
-        rowbuffer[width] = '\n\n';
-        fwrite(rowbuffer,1,width+1,stdout);
+        rowbuffer[target_w] = '\n';
+        fwrite(rowbuffer,1,target_w+1,stdout);
     }
     printf("Loaded image with a width of %ipx, a height of %ipx, and %i channels",width,height,channels);
     stbi_image_free(img);
