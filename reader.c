@@ -22,7 +22,7 @@ int main(void) {
     Image image;
 
     int width,height, channels;
-    unsigned char *img =  stbi_load("images/flowertest.jpg", &width,&height,&channels,3);
+    unsigned char *img =  stbi_load("images/flower.jpg", &width,&height,&channels,3);
 
     if(img==NULL){
         printf("Error when parsing the image");
