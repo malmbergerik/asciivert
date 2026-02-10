@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <time.h>
 #include <stdlib.h>
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -7,6 +8,8 @@
 
 
 int main(void) {
+    clock_t begin = clock();
+
     int width,height, channels;
     unsigned char *img =  stbi_load("images/flowertest.jpg", &width,&height,&channels,3);
 
@@ -25,8 +28,8 @@ int main(void) {
             unsigned int b =pixelOffset[2];
             
             float level = 1.0f - rgbToBWLevel(r,g,b);
-            char c=putchar(getAsciiFromLevel(level, ascii, 70));
-            putchar(c);
+            putchar(getAsciiFromLevel(level, ascii, 70));
+           
 
         }
             putchar('\n');        
@@ -38,4 +41,7 @@ int main(void) {
 
     printf("Loaded image with a width of %ipx, a height of %ipx, and %i channels",width,height,channels);
     stbi_image_free(img);
+    clock_t end = clock();
+    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+    printf("Time spent in total : %f s", time_spent);
 }
