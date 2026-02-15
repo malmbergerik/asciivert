@@ -5,7 +5,8 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image/stb_image.h"
-#include "converter.c"
+#include "converter.h"
+#include "reader.h"
 
 typedef struct {
     uint16_t bytePerPixel;
@@ -15,26 +16,9 @@ typedef struct {
     float level; 
 }Image;
 
-int main(void) {
-    clock_t begin = clock();
-
-
-    Image image;
-    
-    int width,height, channels;
-    unsigned char *img =  stbi_load("images/mario.png", &width,&height,&channels,3);
-
-    float aspec =(float) height / width;
-    float charAspect = 0.4;
-    int target_w = 100;
-    int target_h = (int)(target_w * aspec * charAspect);    
-    if(img==NULL){
-        printf("Error when parsing the image");
-        exit(1);
-    }
-    
-    image.bytePerPixel= 3;
+void buff_read(unsigned char *buffer, int width, int height, int channels, int target_w, int target_h){
     char *rowbuffer = malloc(target_w +1);
+    Image image;
 
     for(int i = 0; i<target_h; i++){
         for(int j=0; j<target_w; j++){
@@ -48,7 +32,7 @@ int main(void) {
             int count=0;
             for(int k=starty; k<endy; k++){
                 for(int l=startx; l <endx; l++){
-                    unsigned char *pixel = img + (k * width + l) * image.bytePerPixel;
+                    unsigned char *pixel = buffer + (k * width + l) * 3;
                     sum_r += pixel[0];
                     sum_g += pixel[1];
                     sum_b += pixel[2];
@@ -67,7 +51,32 @@ int main(void) {
         rowbuffer[target_w] = '\n';
         fwrite(rowbuffer,1,target_w+1,stdout);
     }
-    printf("Loaded image with a width of %ipx, a height of %ipx, and %i channels",width,height,channels);
+    free(rowbuffer);
+}
+
+void process_frame(unsigned char *buffer, int width, int height, int channels, int target_w){
+    float aspec =(float) height / width;
+    float charAspect = 0.4;
+    int target_h = (int)(target_w * aspec * charAspect); 
+    
+    if(buffer==NULL){
+        printf("Error when parsing the image");
+        exit(1);
+    }
+
+
+    buff_read(buffer, width, height, channels, target_w, target_h);
+}
+
+
+void read_image(void) {
+    clock_t begin = clock();
+    Image image;
+    
+    int width,height, channels;
+    unsigned char *img =  stbi_load("../images/mario.png", &width,&height,&channels,3);
+
+    process_frame(img,width,height,channels,80);
     stbi_image_free(img);
     
     clock_t end = clock();
@@ -76,3 +85,4 @@ int main(void) {
     printf("width: %i, height; %i",width,height);
 
 }
+
