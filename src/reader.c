@@ -16,22 +16,23 @@ typedef struct {
     float level; 
 }Image;
 
-void buff_read(unsigned char *buffer, int width, int height, int channels, int target_w, int target_h){
+void buff_read(unsigned char *buffer, uint16_t width, uint16_t height, unsigned char channels, uint16_t target_w, uint16_t target_h){
     char *rowbuffer = malloc(target_w +1);
     Image image;
 
-    for(int i = 0; i<target_h; i++){
-        for(int j=0; j<target_w; j++){
+    for(uint16_t i = 0; i<target_h; i++){
+        for(uint16_t j=0; j<target_w; j++){
 
-            unsigned int startx =(int)(j*(float)width/target_w);
-            unsigned int starty =(int)(i*(float)height/target_h);
-            unsigned int endx =(int)((j+1)*(float)width/target_w);;
-            unsigned int endy =(int)((i+1)*(float)height/target_h);
+            uint16_t startx =(uint16_t)(j*(float)width/target_w);
+            uint16_t starty =(uint16_t)(i*(float)height/target_h);
+            uint16_t endx =(uint16_t)((j+1)*(float)width/target_w);;
+            uint16_t endy =(uint16_t)((i+1)*(float)height/target_h);
             
-            int sum_r =0, sum_g=0,sum_b=0;
-            int count=0;
-            for(int k=starty; k<endy; k++){
-                for(int l=startx; l <endx; l++){
+            uint16_t sum_r =0, sum_g=0,sum_b=0;
+            uint16_t count=0;
+
+            for(uint16_t k=starty; k<endy; k++){
+                for(uint16_t l=startx; l <endx; l++){
                     unsigned char *pixel = buffer + (k * width + l) * 3;
                     sum_r += pixel[0];
                     sum_g += pixel[1];
@@ -54,10 +55,10 @@ void buff_read(unsigned char *buffer, int width, int height, int channels, int t
     free(rowbuffer);
 }
 
-void process_frame(unsigned char *buffer, int width, int height, int channels, int target_w){
+void process_frame(unsigned char *buffer, uint16_t width, uint16_t height, unsigned char channels, uint16_t target_w){
     float aspec =(float) height / width;
     float charAspect = 0.4;
-    int target_h = (int)(target_w * aspec * charAspect); 
+    uint16_t target_h = (uint16_t)(target_w * aspec * charAspect); 
     
     if(buffer==NULL){
         printf("Error when parsing the image");
