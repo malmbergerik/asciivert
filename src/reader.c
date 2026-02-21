@@ -46,7 +46,7 @@ void buff_read(unsigned char *buffer, int width, int height, int channels, int t
             }
             
             image.level = 1.0f - rgbToBWLevel(image.r,image.g,image.b);
-            rowbuffer[j] = getAsciiFromLevel(image.level, ascii, 70);           
+            rowbuffer[j] = getAsciiFromLevel(image.level, ascii, 70,16);           
         }
         rowbuffer[target_w] = '\n';
         fwrite(rowbuffer,1,target_w+1,stdout);
