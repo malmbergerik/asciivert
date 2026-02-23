@@ -27,7 +27,7 @@ int main(void) {
 
     float aspec =(float) height / width;
     float charAspect = 0.4;
-    int target_w = 160;
+    int target_w = 240;
     int target_h = (int)(target_w * aspec * charAspect);
 
     //char *rowbuffer = malloc(target_w +1);

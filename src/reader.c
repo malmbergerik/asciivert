@@ -16,6 +16,7 @@ typedef struct {
     float level; 
 }Image;
 
+
 void buff_read(unsigned char *buffer, uint16_t width, uint16_t height, unsigned char channels, uint16_t target_w, uint16_t target_h){
     char *rowbuffer = malloc(target_w +1);
     Image image;
@@ -46,12 +47,13 @@ void buff_read(unsigned char *buffer, uint16_t width, uint16_t height, unsigned 
                 image.b = (uint8_t)(sum_b/count);
             }
             
-            image.level = 1.0f - rgbToBWLevel(image.r,image.g,image.b);
+            image.level = 1.0f - rgbToBWLevel(image.r,image.g,image.b,1);
             rowbuffer[j] = getAsciiFromLevel(image.level, ascii, 70,16);           
         }
         rowbuffer[target_w] = '\n';
         fwrite(rowbuffer,1,target_w+1,stdout);
     }
+    
     free(rowbuffer);
 }
 
