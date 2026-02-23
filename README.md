@@ -1,4 +1,5 @@
 # Asciivert
+Converts images and camera feed to ascii-art
 ## Contributing
 
 This is a personal project maintained for my own learning and experimentation.  
